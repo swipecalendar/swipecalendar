@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="SwipeCalendar Demo">
+
+    <title>SwipeCalendar Demo</title>
+
+    <!-- FontAwesome - Required for Bootstrap theme -->
+    <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <!-- Bootstrap CSS - Required for Bootstrap theme -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.css' rel='stylesheet' />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/bootstrap/main.min.css' rel='stylesheet' />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.css' rel='stylesheet' />
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.css' rel='stylesheet' />
+
+    <link href='./style.css' rel='stylesheet' />
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/interaction/main.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/bootstrap/main.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.js'></script>
+
+    <script src='../dist/swipeCalendar.min.js'></script>
+
+    <script>
+        var calendar;
+        var calendarEventModal;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            calendarEventModal = document.getElementById('calendar-event-modal');
+
+            var calendarEl = document.getElementById('calendar');
+            calendar = new SwipeCalendar(calendarEl, {
+                plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
+                swipeEffect: 'slide',
+                swipeSpeed: 250,
+                swipeTitlePosition: 'center',
+                header: {
+                    left: 'dayGridMonth,timeGridWeek,timeGridDay,timeGridFourDay',
+                    center: '',
+                    right: 'today prev,next'
+                },
+                views: {
+                    timeGridFourDay: {
+                        type: 'timeGrid',
+                        duration: { days: 4 },
+                        buttonText: '4 days'
+                    }
+                },
+                buttonText: {
+                    timeGridDay: 'day'
+                },
+                themeSystem: 'bootstrap',
+                height: 'parent',
+                defaultView: 'dayGridMonth',
+                defaultDate: '2019-03-12',
+                fixedWeekCount: false,
+                navLinks: true, // can click day/week names to navigate views
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                dayClick: function (date, jsEvent, view) {},
+                eventClick: function (eventClickInfo) {
+                    calendarEventModal.style.display = "block";
+                    calendarEventModal.querySelector('.title-dot-color').style.background = eventClickInfo.event.backgroundColor;
+                    calendarEventModal.querySelector('.title').innerHTML = eventClickInfo.event.title;
+                    calendarEventModal.querySelector('.date').innerHTML = FullCalendar.formatDate(eventClickInfo.event.start,{
+                        month: 'long',
+                        year: 'numeric',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric'
+                    });
+                },
+                events: [
+                    {title: "All Day Event", color: "#1c9749", start: "2019-03-01"},
+                    {title: "Long Event", color: "#1c9749", start: "2019-03-07", end: "2019-03-10"},
+                    {title: "Conference", color: "#f44437", start: "2019-03-11", end: "2019-03-13"},
+                    {title: "Meeting", color: "#ff9900", start: "2019-03-12T10:00:00", end: "2019-03-12T12:00:00"},
+                    {title: "Lunch", color: "#ea1e63", start: "2019-03-12T12:30:00"},
+                    {title: "Meeting", color: "#ff9900", start: "2019-03-16T14:30:00"},
+                    {title: "Happy Hour", color: "#972757", start: "2019-03-18T17:30:00"},
+                    {title: "Conference", color: "#f44437", start: "2019-03-20T10:30:00"},
+                    {title: "Cocktail", color: "#9c26b0", start: "2019-03-21T18:00:00"},
+                    {title: "Dinner", color: "#009788", start: "2019-03-24T20:00:00"},
+                    {title: "Cocktail", color: "#9c26b0", start: "2019-03-27T18:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-01-28T10:00:00", end: "2019-01-28T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-02-04T10:00:00", end: "2019-02-04T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-02-11T10:00:00", end: "2019-02-11T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-02-18T10:00:00", end: "2019-02-18T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-02-25T10:00:00", end: "2019-02-25T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-03-04T10:00:00", end: "2019-03-04T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-03-11T10:00:00", end: "2019-03-11T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-03-18T10:00:00", end: "2019-03-18T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-03-25T10:00:00", end: "2019-03-25T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-01T10:00:00", end: "2019-04-01T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-08T10:00:00", end: "2019-04-08T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-15T10:00:00", end: "2019-04-15T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-22T10:00:00", end: "2019-04-22T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-29T10:00:00", end: "2019-04-29T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-05-06T10:00:00", end: "2019-05-06T11:00:00"}
+                ]
+            });
+        });
+
+        function closeModal() {
+            calendarEventModal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == calendarEventModal) {
+                calendarEventModal.style.display = "none";
+            }
+        }
+    </script>
+
+</head>
+<body>
+    <div id='calendar'></div>
+
+    <!-- Calendar Event Modal -->
+    <div id="calendar-event-modal" class="modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span class="title-dot-color"></span>
+                        <span class="title"></span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="date"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="closeModal();">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

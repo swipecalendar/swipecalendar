@@ -1,0 +1,95 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Roboto",Arial,sans-serif;
+    background-color:  #ffffff;
+    padding: 16px;
+}
+
+.swiper-slide {
+    background-color: #ffffff;
+}
+
+#calendar {
+    height: 100%;
+    width: 100%;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 0.5em;
+}
+
+.fc .fc-toolbar.fc-footer-toolbar {
+    margin-top: 0.5em;
+}
+
+.fc .swc-toolbar {
+    padding: 8px;
+}
+
+.fc .fc-toolbar h2 {
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.fc table {
+    font-size: 14px;
+}
+.fc .fc-head {
+    background-color: #dee2e6;
+}
+
+.fc .fc-event{
+    font-size: 12px;
+    font-weight: lighter;
+}
+
+.fc .fc-event .fc-time {
+    display: none;
+}
+
+.fc .fc-agendaDay-view .fc-event .fc-time {
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.fc .fc-list-table td {
+    padding: 8px 14px;
+}
+
+@media (min-width: 992px) {
+    .fc .fc-toolbar h2 {
+        font-size: 22px;
+    }
+    .fc table {
+        font-size: 16px;
+    }
+    .fc .fc-event{
+        font-size: 14px;
+    }
+    .fc .fc-agendaDay-view .fc-event .fc-time {
+        font-size: 14px;
+    }
+}
+
+
+.modal-content {
+    background-color: #ffffff;
+}
+
+.modal-content .title-dot-color {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #cccccc;
+}
+.modal-content .modal-title span {
+    vertical-align: middle;
+}

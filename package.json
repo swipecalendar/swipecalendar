@@ -1,0 +1,28 @@
+{
+  "name": "swipecalendar",
+  "title": "SwipeCalendar",
+  "version": "2.0.0",
+  "description": "SwipeCalendar is a JavaScript library that provides swiping/sliding capabilities to FullCalendar.",
+  "main": "dist/swipeCalendar.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+	"SwipeCalendar",
+    "FullCalendar",
+    "Calendar",
+    "Swipe",
+    "Slide",
+    "JavaScript",
+	"HTML5"
+  ],
+  "homepage": "https://swipecalendar.io",
+  "author": "Sebastien Pascal <seb@swipecalendar.io> (https://swipecalendar.io)",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "email": "support@swipecalendar.io"
+  },
+  "peerDependencies": {
+    "@fullcalendar/core": "^4.4.0"
+  }
+}
