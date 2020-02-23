@@ -14374,23 +14374,10 @@ class swipeCalendar_SwipeCalendar {
       swipeTitlePosition: 'center',
       defaultView: 'dayGridMonth',
       defaultDate: moment_default()().format('YYYY-MM-DD'),
-      dir: 'ltr',
       header: {
         left: 'dayGridMonth,dayGridWeek,dayGridDay',
         center: '',
         right: 'today prev,next'
-      },
-      buttonText: {
-        day: 'day',
-        month: 'month',
-        next: 'next',
-        nextYear: 'next year',
-        prev: 'prev',
-        prevYear: 'prev year',
-        today: 'today',
-        week: 'week',
-        year: 'year',
-        list: 'list'
       },
       buttonIcons: {
         prev: 'chevron-left',
@@ -14414,6 +14401,7 @@ class swipeCalendar_SwipeCalendar {
     this._calendarHeight = this._options.height;
     this._calendarHeader = this._options.header ? mergeDeep({}, this._options.header) : null;
     this._calendarFooter = this._options.footer ? mergeDeep({}, this._options.footer) : null;
+    this._buttonTextOverrides = this._options.buttonText ? mergeDeep({}, this._options.buttonText) : null;
     this._currentView = this._options.defaultView;
     this._currentDate = moment_default()(this._options.defaultDate);
     this._viewSkeletonRenderCb = this._options.viewSkeletonRender;
@@ -14433,6 +14421,8 @@ class swipeCalendar_SwipeCalendar {
     this._footerElement = null;
     this._titleElement = null;
     this._todayButtonElement = null;
+    this._buttonTextElements = [];
+    this._buttonIconElements = [];
     this._prevCal = null;
     this._curCal = null;
     this._nextCal = null;
@@ -14450,12 +14440,6 @@ class swipeCalendar_SwipeCalendar {
     }
 
     this._element.classList.add('swc', 'fc');
-
-    if (this._options.dir === 'rtl') {
-      this._element.classList.add('fc-rtl');
-    } else {
-      this._element.classList.add('fc-ltr');
-    }
 
     if (this._options.themeSystem === 'bootstrap') {
       this._element.classList.add('fc-bootstrap');
@@ -14514,7 +14498,7 @@ class swipeCalendar_SwipeCalendar {
 
 
   getOption(name) {
-    return this._options[name];
+    return this._curCal.getOption(name);
   }
   /**
    * Allows to dynamically Set options after initialization.
@@ -14530,14 +14514,18 @@ class swipeCalendar_SwipeCalendar {
 
       this._initSwiper();
     } else if (name === 'header') {
-      this._calendarHeader = this._options.header;
+      this._calendarHeader = this._options.header ? mergeDeep({}, this._options.header) : null;
 
       this._initSwiper();
     } else if (name === 'footer') {
-      this._calendarFooter = this._options.footer;
+      this._calendarFooter = this._options.footer ? mergeDeep({}, this._options.footer) : null;
 
       this._initSwiper();
-    } else if (name === 'themeSystem' || name === 'buttonText' || name === 'buttonIcons' || name === 'bootstrapFontAwesome') {
+    } else if (name === 'buttonText') {
+      this._buttonTextOverrides = this._options.buttonText ? mergeDeep({}, this._options.buttonText) : null;
+
+      this._initSwiper();
+    } else if (name === 'themeSystem' || name === 'buttonIcons' || name === 'bootstrapFontAwesome') {
       this._cleanUp();
 
       this._init();
@@ -15128,7 +15116,6 @@ class swipeCalendar_SwipeCalendar {
 
     this._curCal = this._initCalendar(currentDateId, this._currentDate);
     this.view = this._curCal.view;
-    this._options = mergeDeep(this._curCal.optionsManager.computed, this._options);
 
     this._updateToolbars();
 
@@ -15195,7 +15182,7 @@ class swipeCalendar_SwipeCalendar {
     let previousDate;
     let nextDate;
 
-    if (this._options.dir === 'rtl') {
+    if (this._curCal.getOption('dir') === 'rtl') {
       previousDate = moment_default()(this._currentDate).add(this._getCurrentViewAmount(), this._getCurrentViewUnit());
       nextDate = moment_default()(this._currentDate).subtract(this._getCurrentViewAmount(), this._getCurrentViewUnit());
     } else {
@@ -15261,7 +15248,7 @@ class swipeCalendar_SwipeCalendar {
   _handleSlidePrevTransitionEnd() {
     let previousDate;
 
-    if (this._options.dir === 'rtl') {
+    if (this._curCal.getOption('dir') === 'rtl') {
       this._currentDate = moment_default()(this._currentDate).add(this._getCurrentViewAmount(), this._getCurrentViewUnit());
       previousDate = moment_default()(this._currentDate).add(this._getCurrentViewAmount(), this._getCurrentViewUnit());
     } else {
@@ -15307,7 +15294,7 @@ class swipeCalendar_SwipeCalendar {
   _handleSlideNextTransitionEnd() {
     let nextDate;
 
-    if (this._options.dir === 'rtl') {
+    if (this._curCal.getOption('dir') === 'rtl') {
       this._currentDate = moment_default()(this._currentDate).subtract(this._getCurrentViewAmount(), this._getCurrentViewUnit());
       nextDate = moment_default()(this._currentDate).subtract(this._getCurrentViewAmount(), this._getCurrentViewUnit());
     } else {
@@ -15429,6 +15416,16 @@ class swipeCalendar_SwipeCalendar {
     for (let i = 0; i < activeViewBtnElmts.length; i++) {
       activeViewBtnElmts[i].classList.add('active', 'fc-state-active', 'ui-state-active');
     }
+
+    for (let i = 0; i < this._buttonTextElements.length; i++) {
+      const buttonTextItem = this._buttonTextElements[i];
+      buttonTextItem.element.innerHTML = this._getButtonText(buttonTextItem.action);
+    }
+
+    for (let i = 0; i < this._buttonIconElements.length; i++) {
+      const buttonIconItem = this._buttonIconElements[i];
+      buttonIconItem.element.setAttribute('aria-label', this._getButtonText(buttonIconItem.action));
+    }
   }
 
   _getButtonIcon(action) {
@@ -15446,26 +15443,57 @@ class swipeCalendar_SwipeCalendar {
       }
     }
 
-    if (iconSpanElem == null) {
-      iconSpanElem = document.createElement('span');
-      iconSpanElem.innerHTML = action;
-    }
-
     return iconSpanElem;
   }
 
-  _getButtonText(action, defaultAction) {
+  _getButtonText(action) {
     let text = action;
 
-    if (this._options.buttonText) {
-      if (this._options.buttonText[action]) {
-        text = this._options.buttonText[action];
-      } else if (defaultAction && this._options.buttonText[defaultAction]) {
-        text = this._options.buttonText[defaultAction];
+    if (this._buttonTextOverrides && this._buttonTextOverrides[action]) {
+      text = this._buttonTextOverrides[action];
+    } else {
+      const locale = this._options.locale ? this._options.locale : 'en';
+
+      if (this._curCal && this._curCal.availableRawLocales) {
+        let rawLocale = this._curCal.availableRawLocales[locale];
+
+        if (rawLocale == null) {
+          rawLocale = this._curCal.availableRawLocales['en'];
+        }
+
+        if (rawLocale && rawLocale.buttonText) {
+          const viewSpecs = this._curCal.viewSpecs[action];
+
+          if (viewSpecs) {
+            text = viewSpecs.buttonTextDefault;
+          } else {
+            text = rawLocale.buttonText[action];
+          }
+        }
       }
     }
 
     return text;
+  }
+
+  _setButtonNavElement(element, action) {
+    const iconElem = this._getButtonIcon(action);
+
+    if (iconElem) {
+      element.appendChild(iconElem);
+
+      this._buttonIconElements.push({
+        action: action,
+        element: element
+      });
+    } else {
+      element.innerHTML = this._getButtonText(action);
+
+      this._buttonTextElements.push({
+        action: action,
+        element: element
+      });
+    }
   }
 
   _getButton(action, cornerLeft, cornerRight) {
@@ -15507,24 +15535,24 @@ class swipeCalendar_SwipeCalendar {
 
       switch (action) {
         case 'prev':
-          element.setAttribute('aria-label', this._getButtonText(action));
-          element.appendChild(this._getButtonIcon(action));
+          this._setButtonNavElement(element, action);
+
           element.addEventListener('click', () => {
             this._swiper.slidePrev();
           });
           break;
 
         case 'next':
-          element.setAttribute('aria-label', this._getButtonText(action));
-          element.appendChild(this._getButtonIcon(action));
+          this._setButtonNavElement(element, action);
+
           element.addEventListener('click', () => {
             this._swiper.slideNext();
           });
           break;
 
         case 'prevYear':
-          element.setAttribute('aria-label', this._getButtonText(action));
-          element.appendChild(this._getButtonIcon(action));
+          this._setButtonNavElement(element, action);
+
           element.addEventListener('click', () => {
             const prevYear = moment_default()(this._currentDate).subtract(1, 'years');
 
@@ -15533,8 +15561,8 @@ class swipeCalendar_SwipeCalendar {
           break;
 
         case 'nextYear':
-          element.setAttribute('aria-label', this._getButtonText(action));
-          element.appendChild(this._getButtonIcon(action));
+          this._setButtonNavElement(element, action);
+
           element.addEventListener('click', () => {
             const nextYear = moment_default()(this._currentDate).add(1, 'years');
 
@@ -15550,69 +15578,33 @@ class swipeCalendar_SwipeCalendar {
             this._gotoDate(today);
           });
           this._todayButtonElement = element;
-          break;
 
-        case 'listYear':
-          element.innerHTML = this._getButtonText(action, 'year');
-          element.addEventListener('click', () => {
-            this._changeView(action);
+          this._buttonTextElements.push({
+            action: action,
+            element: element
           });
-          break;
 
-        case 'dayGridMonth':
-          element.innerHTML = this._getButtonText(action, 'month');
-          element.addEventListener('click', () => {
-            this._changeView(action);
-          });
-          break;
-
-        case 'listMonth':
-          element.innerHTML = this._getButtonText(action, 'month');
-          element.addEventListener('click', () => {
-            this._changeView(action);
-          });
-          break;
-
-        case 'dayGridWeek':
-          element.innerHTML = this._getButtonText(action, 'week');
-          element.addEventListener('click', () => {
-            this._changeView(action);
-          });
-          break;
-
-        case 'listWeek':
-          element.innerHTML = this._getButtonText(action, 'week');
-          element.addEventListener('click', () => {
-            this._changeView(action);
-          });
-          break;
-
-        case 'timeGridWeek':
-          element.innerHTML = this._getButtonText(action, 'week');
-          element.addEventListener('click', () => {
-            this._changeView(action);
-          });
           break;
 
         case 'dayGridDay':
-          element.innerHTML = this._getButtonText(action, 'day');
-          element.addEventListener('click', () => {
-            this._changeView(action);
-          });
-          break;
-
-        case 'listDay':
-          element.innerHTML = this._getButtonText(action, 'list');
-          element.addEventListener('click', () => {
-            this._changeView(action);
-          });
-          break;
-
+        case 'dayGridWeek':
+        case 'dayGridMonth':
         case 'timeGridDay':
-          element.innerHTML = this._getButtonText(action, 'list');
+        case 'timeGridWeek':
+        case 'listDay':
+        case 'listWeek':
+        case 'listMonth':
+        case 'listYear':
+          element.innerHTML = this._getButtonText(action);
           element.addEventListener('click', () => {
             this._changeView(action);
           });
+
+          this._buttonTextElements.push({
+            action: action,
+            element: element
+          });
+
           break;
 
         default:
@@ -15654,17 +15646,17 @@ class swipeCalendar_SwipeCalendar {
 
   _getButtonGroup(actions) {
     const element = document.createElement('div');
-    const splittedActions = actions.split(",");
+    const splitActions = actions.split(",");
 
-    if (splittedActions) {
+    if (splitActions) {
       if (this._options.themeSystem === 'bootstrap') {
         element.className = 'btn-group';
       } else {
         element.className = 'fc-button-group';
       }
 
-      for (let i = 0; i < splittedActions.length; i++) {
-        element.appendChild(this._getButton(splittedActions[i], i === 0, i === splittedActions.length - 1));
+      for (let i = 0; i < splitActions.length; i++) {
+        element.appendChild(this._getButton(splitActions[i], i === 0, i === splitActions.length - 1));
       }
     }
 
@@ -15676,14 +15668,14 @@ class swipeCalendar_SwipeCalendar {
     element.className = 'fc-' + position;
 
     if (toolbarPositionActions) {
-      const splittedActions = toolbarPositionActions.split(" ");
+      const splitActions = toolbarPositionActions.split(" ");
 
-      if (splittedActions) {
-        for (let i = 0; i < splittedActions.length; i++) {
-          if (splittedActions[i].indexOf(",") !== -1) {
-            element.appendChild(this._getButtonGroup(splittedActions[i]));
+      if (splitActions) {
+        for (let i = 0; i < splitActions.length; i++) {
+          if (splitActions[i].indexOf(",") !== -1) {
+            element.appendChild(this._getButtonGroup(splitActions[i]));
           } else {
-            element.appendChild(this._getButton(splittedActions[i]));
+            element.appendChild(this._getButton(splitActions[i]));
           }
         }
       }
@@ -15693,6 +15685,8 @@ class swipeCalendar_SwipeCalendar {
   }
 
   _getToolbar(toolbarDef, isHeader) {
+    this._buttonTextElements = [];
+    this._buttonIconElements = [];
     let element = null;
 
     if (toolbarDef) {
