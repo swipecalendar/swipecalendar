@@ -15106,18 +15106,13 @@ class swipeCalendar_SwipeCalendar {
   _initSwiper() {
     this._cleanUp();
 
-    const currentDateId = this._getDateId(this._currentDate);
-
     while (this._wrapperElement.hasChildNodes()) {
       this._wrapperElement.removeChild(this._wrapperElement.firstChild);
     }
 
+    const currentDateId = this._getDateId(this._currentDate);
+
     this._wrapperElement.appendChild(this._getCalendarSlide(currentDateId));
-
-    this._curCal = this._initCalendar(currentDateId, this._currentDate);
-    this.view = this._curCal.view;
-
-    this._updateToolbars();
 
     this.swiperConfig = {
       direction: 'horizontal',
@@ -15178,6 +15173,11 @@ class swipeCalendar_SwipeCalendar {
     this._swiper = new swiper_esm_bundle(this._containerElement, this.swiperConfig);
 
     this._swiper.update();
+
+    this._curCal = this._initCalendar(currentDateId, this._currentDate);
+    this.view = this._curCal.view;
+
+    this._updateToolbars();
 
     let previousDate;
     let nextDate;
@@ -15469,6 +15469,42 @@ class swipeCalendar_SwipeCalendar {
           } else {
             text = rawLocale.buttonText[action];
           }
+        }
+      } else {
+        switch (action) {
+          case 'dayGrid':
+            text = 'dayGrid';
+            break;
+
+          case 'dayGridDay':
+          case 'timeGridDay':
+            text = 'day';
+            break;
+
+          case 'dayGridWeek':
+          case 'timeGridWeek':
+            text = 'week';
+            break;
+
+          case 'dayGridMonth':
+            text = 'month';
+            break;
+
+          case 'list':
+          case 'listDay':
+          case 'listWeek':
+          case 'listMonth':
+          case 'listYear':
+            text = 'list';
+            break;
+
+          case 'timeGrid':
+            text = 'timeGrid';
+            break;
+
+          default:
+            text = action;
+            break;
         }
       }
     }

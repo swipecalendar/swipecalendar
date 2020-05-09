@@ -1,3 +1,8 @@
+v2.0.2 (2020-04-26)
+-------------------
+
+- Fixed calendar height issue during initialization
+
 v2.0.1 (2020-02-22)
 -------------------
 
