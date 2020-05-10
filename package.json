@@ -1,7 +1,7 @@
 {
   "name": "swipecalendar",
   "title": "SwipeCalendar",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "SwipeCalendar is a JavaScript library that provides swiping/sliding capabilities to FullCalendar.",
   "main": "dist/swipeCalendar.min.js",
   "scripts": {

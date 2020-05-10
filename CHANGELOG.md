@@ -1,3 +1,8 @@
+v2.0.3 (2020-05-10)
+-------------------
+
+- Fixed calendar event dragging visibility issue
+
 v2.0.2 (2020-04-26)
 -------------------
 

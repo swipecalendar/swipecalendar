@@ -5156,7 +5156,7 @@ module.exports = exported;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(2);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".swc .swc-toolbar{padding:8px}", ""]);
+exports.push([module.i, ".swc .swc-toolbar{padding:8px}.swc .fc-dragging.fc-day-grid-event{position:absolute!important;visibility:hidden}", ""]);
 // Exports
 module.exports = exports;
 
@@ -14412,6 +14412,7 @@ class swipeCalendar_SwipeCalendar {
     this._navLinkWeekClickCb = this._options.navLinkWeekClick;
     this._eventClickCb = this._options.eventClick;
     this._dateClickCb = this._options.dateClick;
+    this._eventDragStartCb = this._options.eventDragStart;
     this._noLicenseKey = false;
     this._inhibitCalClick = false;
     this._swiper = null;
@@ -14901,21 +14902,21 @@ class swipeCalendar_SwipeCalendar {
 
   _showTrialMessage() {
     console.log('*****************************************************************************************************');
-    console.log("* SwipeCalendar is running in Trial mode.                                                           *");
+    console.log('* SwipeCalendar is running in Trial mode.                                                           *');
     console.log('* Please provide a valid "swipeLicenseKey" or visit https://swipecalendar.io for more information.  *');
     console.log('*****************************************************************************************************');
   }
 
   _getCreditLink() {
     const creditContainerElement = document.createElement('div');
-    creditContainerElement.style.paddingLeft = "4px";
-    creditContainerElement.style.lineHeight = "22px";
+    creditContainerElement.style.paddingLeft = '4px';
+    creditContainerElement.style.lineHeight = '22px';
     const creditLinkElement = document.createElement('a');
     creditLinkElement.innerText = 'SwipeCalendar.io';
     creditLinkElement.href = 'https://swipecalendar.io';
-    creditLinkElement.style.color = "#b0b0b0";
-    creditLinkElement.style.fontSize = "12px";
-    creditLinkElement.style.textDecoration = "none";
+    creditLinkElement.style.color = '#b0b0b0';
+    creditLinkElement.style.fontSize = '12px';
+    creditLinkElement.style.textDecoration = 'none';
     creditContainerElement.appendChild(creditLinkElement);
     return creditContainerElement;
   }
@@ -15072,6 +15073,29 @@ class swipeCalendar_SwipeCalendar {
 
         if (this._dateClickCb) {
           this._dateClickCb(dateClickInfo);
+        }
+      },
+      eventDragStart: _eventDragStart => {
+        setTimeout(() => {
+          if (this._curCal) {
+            const box = this._curCal.el.getBoundingClientRect();
+
+            const offsetX = box.left * -1;
+            const offsetY = box.top * -1;
+
+            const draggingElements = this._curCal.el.querySelectorAll('.fc-dragging.fc-day-grid-event');
+
+            if (draggingElements) {
+              for (let i = 0; i < draggingElements.length; i++) {
+                draggingElements[i].style.transform = 'translateX(' + offsetX + 'px) translateY(' + offsetY + 'px)';
+                draggingElements[i].style.visibility = 'initial';
+              }
+            }
+          }
+        }, 1);
+
+        if (this._eventDragStartCb) {
+          this._eventDragStartCb(_eventDragStart);
         }
       }
     });
@@ -15682,7 +15706,7 @@ class swipeCalendar_SwipeCalendar {
 
   _getButtonGroup(actions) {
     const element = document.createElement('div');
-    const splitActions = actions.split(",");
+    const splitActions = actions.split(',');
 
     if (splitActions) {
       if (this._options.themeSystem === 'bootstrap') {
@@ -15704,11 +15728,11 @@ class swipeCalendar_SwipeCalendar {
     element.className = 'fc-' + position;
 
     if (toolbarPositionActions) {
-      const splitActions = toolbarPositionActions.split(" ");
+      const splitActions = toolbarPositionActions.split(' ');
 
       if (splitActions) {
         for (let i = 0; i < splitActions.length; i++) {
-          if (splitActions[i].indexOf(",") !== -1) {
+          if (splitActions[i].indexOf(',') !== -1) {
             element.appendChild(this._getButtonGroup(splitActions[i]));
           } else {
             element.appendChild(this._getButton(splitActions[i]));
