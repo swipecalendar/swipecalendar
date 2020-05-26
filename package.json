@@ -1,8 +1,8 @@
 {
   "name": "swipecalendar",
   "title": "SwipeCalendar",
-  "version": "2.0.3",
-  "description": "SwipeCalendar is a JavaScript library that provides swiping/sliding capabilities to FullCalendar.",
+  "version": "2.0.4",
+  "description": "SwipeCalendar is a third-party JavaScript plugin that provides swiping/sliding capabilities to FullCalendar.",
   "main": "dist/swipeCalendar.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

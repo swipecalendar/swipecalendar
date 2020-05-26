@@ -1,3 +1,8 @@
+v2.0.4 (2020-05-25)
+-------------------
+
+- Fixed calendar data not saved when setting options
+
 v2.0.3 (2020-05-10)
 -------------------
 

@@ -14440,7 +14440,7 @@ class swipeCalendar_SwipeCalendar {
       this._element.removeChild(this._element.firstChild);
     }
 
-    this._element.classList.add('swc', 'fc');
+    this._element.classList.add('swipecalendar', 'swc', 'fc');
 
     if (this._options.themeSystem === 'bootstrap') {
       this._element.classList.add('fc-bootstrap');
@@ -14508,6 +14508,8 @@ class swipeCalendar_SwipeCalendar {
 
 
   setOption(name, value) {
+    this._saveCalData();
+
     this._options[name] = value;
 
     if (name === 'height') {
@@ -14863,6 +14865,19 @@ class swipeCalendar_SwipeCalendar {
       this._swiper.destroy();
 
       this._swiper = null;
+    }
+  }
+
+  _saveCalData() {
+    this._calEventSources = this._curCal.state.eventSources;
+    this._calEventStore = this._curCal.state.eventStore;
+
+    if (this._curCal.state.resourceSource) {
+      this._calResourceSource = this._curCal.state.resourceSource;
+    }
+
+    if (this._curCal.state.resourceStore) {
+      this._calResourceStore = this._curCal.state.resourceStore;
     }
   }
 
@@ -15376,16 +15391,7 @@ class swipeCalendar_SwipeCalendar {
   }
 
   _gotoDate(date) {
-    this._calEventSources = this._curCal.state.eventSources;
-    this._calEventStore = this._curCal.state.eventStore;
-
-    if (this._curCal.state.resourceSource) {
-      this._calResourceSource = this._curCal.state.resourceSource;
-    }
-
-    if (this._curCal.state.resourceStore) {
-      this._calResourceStore = this._curCal.state.resourceStore;
-    }
+    this._saveCalData();
 
     this._currentDate = moment_default()(date);
 
@@ -15393,16 +15399,7 @@ class swipeCalendar_SwipeCalendar {
   }
 
   _changeView(view) {
-    this._calEventSources = this._curCal.state.eventSources;
-    this._calEventStore = this._curCal.state.eventStore;
-
-    if (this._curCal.state.resourceSource) {
-      this._calResourceSource = this._curCal.state.resourceSource;
-    }
-
-    if (this._curCal.state.resourceStore) {
-      this._calResourceStore = this._curCal.state.resourceStore;
-    }
+    this._saveCalData();
 
     this._currentView = view;
 
