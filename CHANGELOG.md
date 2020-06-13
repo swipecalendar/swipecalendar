@@ -1,3 +1,8 @@
+v2.0.5 (2020-06-12)
+-------------------
+
+- Fixed calendar events that disappears when using json feed
+
 v2.0.4 (2020-05-25)
 -------------------
 

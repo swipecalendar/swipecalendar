@@ -14428,9 +14428,7 @@ class swipeCalendar_SwipeCalendar {
     this._curCal = null;
     this._nextCal = null;
     this._calEventStore = null;
-    this._calEventSources = null;
     this._calResourceStore = null;
-    this._calResourceSource = null;
 
     this._init();
   }
@@ -14533,7 +14531,7 @@ class swipeCalendar_SwipeCalendar {
 
       this._init();
     } else {
-      this._initSwiper();
+      this._applyMethod('setOption', name, value);
     }
   }
   /**
@@ -14869,14 +14867,11 @@ class swipeCalendar_SwipeCalendar {
   }
 
   _saveCalData() {
-    this._calEventSources = this._curCal.state.eventSources;
-    this._calEventStore = this._curCal.state.eventStore;
-
-    if (this._curCal.state.resourceSource) {
-      this._calResourceSource = this._curCal.state.resourceSource;
+    if (Array.isArray(this._options.events)) {
+      this._calEventStore = this._curCal.state.eventStore;
     }
 
-    if (this._curCal.state.resourceStore) {
+    if (Array.isArray(this._options.resources) && this._curCal.state.resourceStore) {
       this._calResourceStore = this._curCal.state.resourceStore;
     }
   }
@@ -15122,20 +15117,12 @@ class swipeCalendar_SwipeCalendar {
       calendar = new core_["Calendar"](calendarEl, calOptions);
     }
 
-    if (this._calEventStore != null) {
+    if (Array.isArray(this._options.events) && this._calEventStore != null) {
       calendar.state.eventStore = this._calEventStore;
     }
 
-    if (this._calEventSources != null) {
-      calendar.state.eventSources = this._calEventSources;
-    }
-
-    if (this._calResourceStore != null) {
+    if (Array.isArray(this._options.resources) && this._calResourceStore != null) {
       calendar.state.resourceStore = this._calResourceStore;
-    }
-
-    if (this._calResourceSource != null) {
-      calendar.state.resourceSource = this._calResourceSource;
     }
 
     calendar.render();
@@ -15259,28 +15246,37 @@ class swipeCalendar_SwipeCalendar {
 
   _handleSlideChangeTransitionStart() {
     if (this._prevCal && this._nextCal) {
-      this._calEventSources = this._curCal.state.eventSources;
-      this._prevCal.state.eventSources = this._calEventSources;
-      this._nextCal.state.eventSources = this._calEventSources;
-      this._calEventStore = this._curCal.state.eventStore;
-      this._prevCal.state.eventStore = this._calEventStore;
-      this._nextCal.state.eventStore = this._calEventStore;
+      if (Array.isArray(this._options.events)) {
+        this._calEventStore = this._curCal.state.eventStore;
+        this._prevCal.state.eventStore = this._calEventStore;
+        this._nextCal.state.eventStore = this._calEventStore;
 
-      if (this._curCal.state.resourceStore) {
+        this._prevCal.rerenderEvents();
+
+        this._nextCal.rerenderEvents();
+      } else {
+        this._prevCal.refetchEvents();
+
+        this._nextCal.refetchEvents();
+      }
+
+      if (Array.isArray(this._options.resources) && this._curCal.state.resourceStore) {
         this._calResourceStore = this._curCal.state.resourceStore;
         this._prevCal.state.resourceStore = this._calResourceStore;
         this._nextCal.state.resourceStore = this._calResourceStore;
+
+        this._prevCal.rerenderResources();
+
+        this._nextCal.rerenderResources();
+      } else {
+        if (this._prevCal.state.resourceSource) {
+          this._prevCal.refetchResources();
+        }
+
+        if (this._nextCal.state.resourceSource) {
+          this._nextCal.refetchResources();
+        }
       }
-
-      if (this._curCal.state.resourceSource) {
-        this._calResourceSource = this._curCal.state.resourceSource;
-        this._prevCal.state.resourceSource = this._calResourceSource;
-        this._nextCal.state.resourceSource = this._calResourceSource;
-      }
-
-      this._prevCal.rerenderEvents();
-
-      this._nextCal.rerenderEvents();
     }
   }
 
