@@ -1,7 +1,7 @@
 {
   "name": "swipecalendar",
   "title": "SwipeCalendar",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "SwipeCalendar is a third-party JavaScript plugin that provides swiping/sliding capabilities to FullCalendar.",
   "main": "dist/swipeCalendar.min.js",
   "scripts": {
@@ -27,6 +27,6 @@
     "email": "support@swipecalendar.io"
   },
   "peerDependencies": {
-    "@fullcalendar/core": "^4.4.0"
+    "@fullcalendar/core": "^4.4.2"
   }
 }
