@@ -1,3 +1,9 @@
+v2.0.7 (2020-10-26)
+-------------------
+
+- Fixed select callback not inhibited while swiping
+- Updated lib dependencies
+
 v2.0.6 (2020-06-28)
 -------------------
 

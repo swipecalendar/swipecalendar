@@ -1,5 +1,5 @@
 /*!
- * SwipeCalendar v2.0.6
+ * SwipeCalendar v2.0.7
  * Doc & License: https://swipecalendar.io/
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var require;//! moment.js
-//! version : 2.27.0
+//! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -2643,8 +2643,7 @@ return /******/ (function(modules) { // webpackBootstrap
     hooks.createFromInputFallback = deprecate(
         'value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), ' +
             'which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are ' +
-            'discouraged and will be removed in an upcoming major release. Please refer to ' +
-            'http://momentjs.com/guides/#/warnings/js-date/ for more info.',
+            'discouraged. Please refer to http://momentjs.com/guides/#/warnings/js-date/ for more info.',
         function (config) {
             config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
         }
@@ -3829,7 +3828,10 @@ return /******/ (function(modules) { // webpackBootstrap
     function calendar$1(time, formats) {
         // Support for single parameter, formats only overload to the calendar function
         if (arguments.length === 1) {
-            if (isMomentInput(arguments[0])) {
+            if (!arguments[0]) {
+                time = undefined;
+                formats = undefined;
+            } else if (isMomentInput(arguments[0])) {
                 time = arguments[0];
                 formats = undefined;
             } else if (isCalendarSpec(arguments[0])) {
@@ -4507,7 +4509,7 @@ return /******/ (function(modules) { // webpackBootstrap
             eras = this.localeData().eras();
         for (i = 0, l = eras.length; i < l; ++i) {
             // truncate time
-            val = this.startOf('day').valueOf();
+            val = this.clone().startOf('day').valueOf();
 
             if (eras[i].since <= val && val <= eras[i].until) {
                 return eras[i].name;
@@ -4527,7 +4529,7 @@ return /******/ (function(modules) { // webpackBootstrap
             eras = this.localeData().eras();
         for (i = 0, l = eras.length; i < l; ++i) {
             // truncate time
-            val = this.startOf('day').valueOf();
+            val = this.clone().startOf('day').valueOf();
 
             if (eras[i].since <= val && val <= eras[i].until) {
                 return eras[i].narrow;
@@ -4547,7 +4549,7 @@ return /******/ (function(modules) { // webpackBootstrap
             eras = this.localeData().eras();
         for (i = 0, l = eras.length; i < l; ++i) {
             // truncate time
-            val = this.startOf('day').valueOf();
+            val = this.clone().startOf('day').valueOf();
 
             if (eras[i].since <= val && val <= eras[i].until) {
                 return eras[i].abbr;
@@ -4570,7 +4572,7 @@ return /******/ (function(modules) { // webpackBootstrap
             dir = eras[i].since <= eras[i].until ? +1 : -1;
 
             // truncate time
-            val = this.startOf('day').valueOf();
+            val = this.clone().startOf('day').valueOf();
 
             if (
                 (eras[i].since <= val && val <= eras[i].until) ||
@@ -5721,7 +5723,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     //! moment.js
 
-    hooks.version = '2.27.0';
+    hooks.version = '2.29.1';
 
     setHookCallback(createLocal);
 
@@ -5952,7 +5954,7 @@ function applyToTag(style, options, obj) {
     style.removeAttribute('media');
   }
 
-  if (sourceMap && btoa) {
+  if (sourceMap && typeof btoa !== 'undefined') {
     css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
   } // For old IE
 
@@ -6173,11 +6175,9 @@ options.singleton = false;
 
 var update = api(content, options);
 
-var exported = content.locals ? content.locals : {};
 
 
-
-module.exports = exported;
+module.exports = content.locals || {};
 
 /***/ }),
 /* 5 */
@@ -6212,11 +6212,9 @@ options.singleton = false;
 
 var update = api(content, options);
 
-var exported = content.locals ? content.locals : {};
 
 
-
-module.exports = exported;
+module.exports = content.locals || {};
 
 /***/ }),
 /* 7 */
@@ -6264,6 +6262,7 @@ module.exports = function(module) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/swiper/swiper.scss
@@ -15636,6 +15635,7 @@ class swipeCalendar_SwipeCalendar {
     this._navLinkWeekClickCb = this._options.navLinkWeekClick;
     this._eventClickCb = this._options.eventClick;
     this._dateClickCb = this._options.dateClick;
+    this._selectCb = this._options.select;
     this._eventDragStartCb = this._options.eventDragStart;
     this._noLicenseKey = false;
     this._inhibitCalClick = false;
@@ -16309,7 +16309,16 @@ class swipeCalendar_SwipeCalendar {
           this._dateClickCb(dateClickInfo);
         }
       },
-      eventDragStart: _eventDragStart => {
+      select: selectionInfo => {
+        if (this._inhibitCalClick) {
+          return;
+        }
+
+        if (this._selectCb) {
+          this._selectCb(selectionInfo);
+        }
+      },
+      eventDragStart: eventDragStart => {
         setTimeout(() => {
           if (this._curCal) {
             const box = this._curCal.el.getBoundingClientRect();
@@ -16329,7 +16338,7 @@ class swipeCalendar_SwipeCalendar {
         }, 1);
 
         if (this._eventDragStartCb) {
-          this._eventDragStartCb(_eventDragStart);
+          this._eventDragStartCb(eventDragStart);
         }
       }
     });
