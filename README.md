@@ -1,6 +1,6 @@
 # SwipeCalendar
 
-SwipeCalendar is a third-party javascript library which brings swiping / sliding capabilities to FullCalendar 4.X.
+SwipeCalendar is a third-party javascript library which brings swiping / sliding capabilities to FullCalendar 5.X.
 
 It allows people to navigate to the next/previous view with a simple and natural swipe gesture.
 
@@ -14,7 +14,7 @@ Perfect plugin to improve the User Experience of anyone who interact with FullCa
 - Slide Transition Effects
 - Mobile Friendly
 - Responsive
-- Same API as FullCalendar 4.X
+- Same API as FullCalendar 5.X
 
 Visit https://swipecalendar.io for a demo and full documentation.
 

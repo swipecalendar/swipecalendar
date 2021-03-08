@@ -1,3 +1,8 @@
+v3.0.0 (2021-03-07)
+-------------------
+
+- SwipeCalendar is now compatible with FullCalendar v5.X
+
 v2.0.7 (2020-10-26)
 -------------------
 

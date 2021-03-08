@@ -13,18 +13,11 @@
     <!-- Bootstrap CSS - Required for Bootstrap theme -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.css' rel='stylesheet' />
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/bootstrap/main.min.css' rel='stylesheet' />
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.css' rel='stylesheet' />
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.css' rel='stylesheet' />
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.min.css' rel='stylesheet' />
 
     <link href='./style.css' rel='stylesheet' />
 
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/interaction/main.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/bootstrap/main.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.min.js'></script>
 
     <script src='../dist/swipeCalendar.min.js'></script>
 
@@ -37,14 +30,13 @@
 
             var calendarEl = document.getElementById('calendar');
             calendar = new SwipeCalendar(calendarEl, {
-                plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
                 swipeEffect: 'slide',
                 swipeSpeed: 250,
                 swipeTitlePosition: 'center',
-                header: {
-                    left: 'dayGridMonth,timeGridWeek,timeGridDay,timeGridFourDay',
+                headerToolbar: {
+                    start: 'dayGridMonth,timeGridWeek,timeGridDay,timeGridFourDay',
                     center: '',
-                    right: 'today prev,next'
+                    end: 'today prev,next'
                 },
                 views: {
                     timeGridFourDay: {
@@ -57,14 +49,13 @@
                     timeGridDay: 'day'
                 },
                 themeSystem: 'bootstrap',
-                height: 'parent',
-                defaultView: 'dayGridMonth',
-                defaultDate: '2019-03-12',
+                height: '100%',
+                initialView: 'dayGridMonth',
+                initialDate: '2021-03-12',
                 fixedWeekCount: false,
                 navLinks: true, // can click day/week names to navigate views
                 editable: true,
-                eventLimit: true, // allow "more" link when too many events
-                dayClick: function (date, jsEvent, view) {},
+                dayMaxEventRows: true, // allow "more" link when too many events
                 eventClick: function (eventClickInfo) {
                     calendarEventModal.style.display = "block";
                     calendarEventModal.querySelector('.title-dot-color').style.background = eventClickInfo.event.backgroundColor;
@@ -78,32 +69,32 @@
                     });
                 },
                 events: [
-                    {title: "All Day Event", color: "#1c9749", start: "2019-03-01"},
-                    {title: "Long Event", color: "#1c9749", start: "2019-03-07", end: "2019-03-10"},
-                    {title: "Conference", color: "#f44437", start: "2019-03-11", end: "2019-03-13"},
-                    {title: "Meeting", color: "#ff9900", start: "2019-03-12T10:00:00", end: "2019-03-12T12:00:00"},
-                    {title: "Lunch", color: "#ea1e63", start: "2019-03-12T12:30:00"},
-                    {title: "Meeting", color: "#ff9900", start: "2019-03-16T14:30:00"},
-                    {title: "Happy Hour", color: "#972757", start: "2019-03-18T17:30:00"},
-                    {title: "Conference", color: "#f44437", start: "2019-03-20T10:30:00"},
-                    {title: "Cocktail", color: "#9c26b0", start: "2019-03-21T18:00:00"},
-                    {title: "Dinner", color: "#009788", start: "2019-03-24T20:00:00"},
-                    {title: "Cocktail", color: "#9c26b0", start: "2019-03-27T18:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-01-28T10:00:00", end: "2019-01-28T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-02-04T10:00:00", end: "2019-02-04T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-02-11T10:00:00", end: "2019-02-11T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-02-18T10:00:00", end: "2019-02-18T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-02-25T10:00:00", end: "2019-02-25T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-03-04T10:00:00", end: "2019-03-04T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-03-11T10:00:00", end: "2019-03-11T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-03-18T10:00:00", end: "2019-03-18T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-03-25T10:00:00", end: "2019-03-25T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-01T10:00:00", end: "2019-04-01T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-08T10:00:00", end: "2019-04-08T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-15T10:00:00", end: "2019-04-15T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-22T10:00:00", end: "2019-04-22T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-04-29T10:00:00", end: "2019-04-29T11:00:00"},
-                    {title: "Weekly Meeting", color: "#2196f3", start: "2019-05-06T10:00:00", end: "2019-05-06T11:00:00"}
+                    {title: "All Day Event", color: "#1c9749", start: "2021-03-01"},
+                    {title: "Long Event", color: "#1c9749", start: "2021-03-07", end: "2021-03-10"},
+                    {title: "Conference", color: "#f44437", start: "2021-03-11", end: "2021-03-13"},
+                    {title: "Meeting", color: "#ff9900", start: "2021-03-12T10:00:00", end: "2021-03-12T12:00:00"},
+                    {title: "Lunch", color: "#ea1e63", start: "2021-03-12T12:30:00"},
+                    {title: "Meeting", color: "#ff9900", start: "2021-03-16T14:30:00"},
+                    {title: "Happy Hour", color: "#972757", start: "2021-03-18T17:30:00"},
+                    {title: "Conference", color: "#f44437", start: "2021-03-20T10:30:00"},
+                    {title: "Cocktail", color: "#9c26b0", start: "2021-03-21T18:00:00"},
+                    {title: "Dinner", color: "#009788", start: "2021-03-24T20:00:00"},
+                    {title: "Cocktail", color: "#9c26b0", start: "2021-03-27T18:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-01-28T10:00:00", end: "2021-01-28T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-02-04T10:00:00", end: "2021-02-04T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-02-11T10:00:00", end: "2021-02-11T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-02-18T10:00:00", end: "2021-02-18T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-02-25T10:00:00", end: "2021-02-25T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-03-04T10:00:00", end: "2021-03-04T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-03-11T10:00:00", end: "2021-03-11T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-03-18T10:00:00", end: "2021-03-18T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-03-25T10:00:00", end: "2021-03-25T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-04-01T10:00:00", end: "2021-04-01T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-04-08T10:00:00", end: "2021-04-08T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-04-15T10:00:00", end: "2021-04-15T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-04-22T10:00:00", end: "2021-04-22T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-04-29T10:00:00", end: "2021-04-29T11:00:00"},
+                    {title: "Weekly Meeting", color: "#2196f3", start: "2021-05-06T10:00:00", end: "2021-05-06T11:00:00"}
                 ]
             });
         });
